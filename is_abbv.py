@@ -1,6 +1,13 @@
 
+import os
+from optparse import OptionParser 
+import sys
 
-from funcs import is_simple, is_complex, is_substring
+from lib.funcs import is_simple, is_complex, is_substring
+from lib.utils import prettify_result
+import unittest    
+from lib.tests import *
+
 
 
 def is_abbreviation(abbreviation, longform):
@@ -8,39 +15,54 @@ def is_abbreviation(abbreviation, longform):
 	category = None 
 	outcome = False
 
-	if is_simple(abbreviation, longform):
-		category = 'simple'
-		outcome = True
+	if len(abbreviation)!=0 and len(longform)!=0:
+	
+		if is_simple(abbreviation, longform):
+			category = 'simple'
+			outcome = True
 
-	elif is_complex(abbreviation, longform):
-		category = 'complex'
-		outcome = True
+		elif is_complex(abbreviation, longform):
+			category = 'complex'
+			outcome = True
 
-	elif is_substring(abbreviation, longform):
-		category = 'substring'
-		outcome = True
-
-
+		elif is_substring(abbreviation, longform):
+			category = 'substring'
+			outcome = True
 
 	
 	return outcome, category
 
 
 
-# print is_abbreviation('AusPost','Australia Post')
-# print is_abbreviation("RADIUS", "Remote Authentication Dial In User Service")
-# print is_abbreviation("AusPost", "Australia Post")
-# print is_abbreviation("FedEx", "Federal Express")
-# print is_abbreviation("ragnat", "Teragen International")
-# print is_abbreviation("cisco", "San Francisco")
-# print is_abbreviation("sonposa", "sonhaypohemsa")
-# print is_abbreviation("FoxTel", "Fox Television")
-# print is_abbreviation("CommBank", "Commonwealth Bank")
-# print is_abbreviation("AmEx", "American Express")
-# print is_abbreviation("TexMex", "Texas Mexico")
-# print is_abbreviation("Gestapo", "Geheime Staats Polizei")
-# print is_abbreviation("Comintern", "Communist International")
-# print is_abbreviation("Wifi", "Wirelss Fidility")
-# print is_abbreviation("Hifi", "High Fidility ")
-# print is_abbreviation("B.Comm","Bachelor of Commerce")
 
+
+
+def main(argv):
+	'''
+			Commandline menu function
+
+	'''
+
+	description = "Utility function to check abbreviation against their longforms"
+
+
+	parser = OptionParser(description=description,
+				usage='usage: %prog [OPTIONS]  <abbreviation> <longform>')
+	
+	parser.add_option("-m",  dest="manual",
+    	help="check abbreviation manually \t\t\t\t\t ex: 'is_abbv.py -m <abbreviation> <longform>' ",
+    	type="string",nargs=2)
+	
+	(options, args) = parser.parse_args()
+	
+	if options.manual:
+		
+		prettify_result(is_abbreviation(options.manual[0],options.manual[1]))
+		
+	
+
+	if len(sys.argv) == 1:
+		parser.parse_args(['--help'])
+
+if __name__ == "__main__":
+   main(sys.argv[1:])
